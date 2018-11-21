@@ -6,6 +6,7 @@ import numpy as np
 # load the wav file and calculate the time 
 sample_rate, data = wavfile.read('DSP.wav')
 times = np.arange(len(data))/float(sample_rate)
+print(data)
 #print(data.shape)
 #print(len(data))
 #print(data.size)
