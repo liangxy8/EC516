@@ -3,7 +3,8 @@ from matplotlib import pyplot as plt
 from scipy import fftpack
 from scipy.io import wavfile
 import numpy as np
-
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 
 [sample_rate, data] = wavfile.read('DSP.wav')
 
@@ -25,18 +26,23 @@ if L > length_window:
 
 
 data = np.append(data, np.zeros(length_window))
-#print(len(data))
-#print(sample_num)
-#for n in range(0, len(data)-length_window+L, L):
-#    spectrum_in_window = fftpack.fft(data[n:n+length_window])
-#    spectrum = np.vstack((spectrum, spectrum_in_window))
-#print(spectrum_in_window)
 
 spectrum = fftpack.fft(data[0:length_window])
-for n in range(length_window+1, sample_num, L):
+for n in range(L, sample_num, L):
+    print(n)
     spectrum_in_window = fftpack.fft(data[n:n+length_window])
     spectrum = np.vstack((spectrum, spectrum_in_window))
 
-
-
-
+fig = plt.figure()
+ax = Axes3D(fig)
+xs = np.arange(spectrum.shape[0])
+ys = np.arange(spectrum.shape[1])
+xs,ys = np.meshgrid(xs,ys)
+sign = np.sign(spectrum.real)
+amplitude = abs(spectrum)*sign
+zs = np.log10(np.transpose(amplitude))
+surf = ax.plot_surface(xs,ys,zs,cmap = cm.coolwarm, linewidth = 0, antialiased = False)
+ax.set_xlabel('n')
+ax.set_ylabel('omega')
+ax.set_zlabel('power of 10')
+plt.savefig('discrete_DTFT.png')
