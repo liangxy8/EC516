@@ -27,7 +27,7 @@ if L > length_window:
     print("Speech signal will lost")
 
 data = np.append(data, np.zeros(length_window))
-#print(type(data))
+print(type(data))
 spectrum = fftpack.fft(data[0:length_window])
 for n in range(L, sample_num, L):
     spectrum_in_window = fftpack.fft(data[n:n+length_window])
@@ -39,10 +39,11 @@ data = np.array([])
 for i in range(spectrum.shape[0]):
     data_in_window = fftpack.ifft(spectrum[i,:])[0:L]
     data = np.append(data, data_in_window)
+    #print(data)
 #print(np.sum(np.round(data.real)))
-data = np.round(data.real).astype(np.int32)
-#print(data.sum())
-#data = np.float64(np.round(data.real)))
+#data = np.round(data.real)
+data = np.round(data.real).astype(int).astype(np.float64)
+#data = np.float64(np.round(data.real))
 #print(np.sum(data))
 
 times = np.arange(len(data))/float(sample_rate)
